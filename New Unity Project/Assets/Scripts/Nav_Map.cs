@@ -49,7 +49,6 @@ public class Nav_Map : MonoBehaviour {
             childNode.uid = i;
             // Add the childNode to our ArrayList of childNodes
             childNodes.Add(childNode);
-            print(childNodes[i]);
             i++;
             
         }

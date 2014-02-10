@@ -8,7 +8,28 @@ public class Nav_Point : MonoBehaviour {
     /// </summary>
     public int uid;
 
-    public int[] weight = new int[1];
+	/// <summary>
+	/// This will eventually be used in setting weights between two nodes
+	/// </summary>
+    public struct Weight
+	{
+		public int srcID;
+		public int destID;
+		public int weight;
+
+		public Weight(int src, int dest, int weightval)
+		{
+			srcID = src;
+			destID = dest;
+			weight = weightval;
+		}
+	}
+
+	/// <summary>
+	/// This will be used to access whether the node has 
+	/// a tower on top of it or not.
+	/// </summary>
+	public bool hasTower = false;
 
 
     /// <summary>
