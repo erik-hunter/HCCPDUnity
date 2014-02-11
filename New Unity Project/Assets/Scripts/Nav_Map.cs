@@ -11,6 +11,7 @@ public class Nav_Map : MonoBehaviour {
     /// </summary>
     private GameObject[] points;
     private Nav_Point childNode;
+    private GameObject childGO;
     private IList<Nav_Point> childNodes = new List<Nav_Point>();
 
 
@@ -28,6 +29,7 @@ public class Nav_Map : MonoBehaviour {
     {
         yield return new WaitForSeconds(secs);
         GetAllNodes();
+        SetTriggers();
         print("Setup Complete");
     }
 
@@ -52,6 +54,22 @@ public class Nav_Map : MonoBehaviour {
             i++;
             
         }
+    }
+
+    void SetTriggers()
+    {
+        foreach (Nav_Point child in childNodes)
+        {
+            childGO = child.gameObject;
+
+            SphereCollider neighbors = childGO.AddComponent<SphereCollider>();
+            neighbors.enabled = false;
+            neighbors.isTrigger = true;
+
+            neighbors.radius = 3f;
+
+        }
+ 
     }
 
 

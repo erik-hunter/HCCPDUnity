@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Nav_Point : MonoBehaviour {
 
@@ -25,6 +26,8 @@ public class Nav_Point : MonoBehaviour {
 			weight = weightval;
 		}
 	}
+
+    public IList<Nav_Neighbors> navNeighbors = new List<Nav_Neighbors>();
 
 	/// <summary>
 	/// This will be used to access whether the node has 
