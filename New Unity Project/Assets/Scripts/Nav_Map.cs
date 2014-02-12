@@ -4,8 +4,7 @@ using System.Threading;
 using System.Collections.Generic;
 
 public class Nav_Map : MonoBehaviour {
-
-
+	
     /// <summary>
     /// The lists we will use to access and store our Nav_Points
     /// </summary>
@@ -16,7 +15,7 @@ public class Nav_Map : MonoBehaviour {
 
 
     void Start () {
-        print("Setup Starting....");
+        print("Setup Starting");
         StartCoroutine(Wait(3.0f));
     }
 
@@ -27,13 +26,31 @@ public class Nav_Map : MonoBehaviour {
     /// <returns></returns>
     IEnumerator Wait(float secs)
     {
+		print ("Waiting....");
         yield return new WaitForSeconds(secs);
-        GetAllNodes();
-        SetTriggers();
-        print("Setup Complete");
+		print ("Done waiting....");
+		Setup ();
     }
 
-    /// <summary>
+	IEnumerator NavWait()
+	{
+		print ("Waiting on Triggers");
+		yield return new WaitForSeconds(3.0f);
+		print ("Done waiting on Triggers");
+		print (childNodes[0].navNeighbors[0].uid);
+	}
+	
+	void Setup()
+	{
+
+		GetAllNodes();
+		SetTriggers();
+		print("Setup Complete");
+		StartCoroutine (NavWait());
+
+	}
+	
+	/// <summary>
     /// This will get every node on our map and assign a UID to it. Can access later.
     /// </summary>
     void GetAllNodes()
@@ -61,16 +78,15 @@ public class Nav_Map : MonoBehaviour {
         foreach (Nav_Point child in childNodes)
         {
             childGO = child.gameObject;
-
-            SphereCollider neighbors = childGO.AddComponent<SphereCollider>();
-            neighbors.enabled = false;
-            neighbors.isTrigger = true;
+			SphereCollider neighbors = (SphereCollider)childGO.collider;
 
             neighbors.radius = 3f;
 
         }
  
     }
+
+
 
 
 }

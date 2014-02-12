@@ -4,30 +4,20 @@ using System.Collections.Generic;
 
 public class Nav_Point : MonoBehaviour {
 
+	private Nav_Point neighbor;
+	public int weight = 0;
+
     /// <summary>
     /// This is the unique identifer for each particular node.
     /// </summary>
     public int uid;
 
+
 	/// <summary>
-	/// This will eventually be used in setting weights between two nodes.
-	/// srcID may not be neccessary, but it is here for now.
+	/// This is just a list that will contain all of the nodes we can reach
+	/// from a given node.
 	/// </summary>
-    public struct Weight
-	{
-		public int srcID;
-		public int destID;
-		public int weight;
-
-		public Weight(int src, int dest, int weightval)
-		{
-			srcID = src;
-			destID = dest;
-			weight = weightval;
-		}
-	}
-
-    public IList<Nav_Neighbors> navNeighbors = new List<Nav_Neighbors>();
+    public IList<Nav_Point> navNeighbors = new List<Nav_Point>();
 
 	/// <summary>
 	/// This will be used to access whether the node has 
@@ -46,8 +36,18 @@ public class Nav_Point : MonoBehaviour {
         if (other.gameObject.tag == "Planet")
         {
             Destroy(this.rigidbody);
-            Destroy(this.collider);
+            this.collider.isTrigger = true;
         }
     }
+
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.gameObject.tag == "NavPoint") 
+		{
+			print ("Adding to our NavNeighbors List");
+			neighbor = other.gameObject.GetComponent<Nav_Point>();
+			navNeighbors.Add (neighbor);
+		}
+	}
 
 }
