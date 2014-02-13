@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Nav_Point : MonoBehaviour,IEnumerator,IEnumerable {
 
+    public GameObject child;
 	private Nav_Point neighbor;
 	public int weight = 1;
     int position = -1;
