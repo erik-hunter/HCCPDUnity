@@ -16,7 +16,7 @@ public class Nav_Map : MonoBehaviour {
 
     void Start () {
         print("Setup Starting");
-        StartCoroutine(Wait(3.0f));
+        StartCoroutine(Wait(1.0f));
     }
 
     /// <summary>
@@ -26,28 +26,27 @@ public class Nav_Map : MonoBehaviour {
     /// <returns></returns>
     IEnumerator Wait(float secs)
     {
-		print ("Waiting....");
+		print ("Waiting wait for drop");
         yield return new WaitForSeconds(secs);
-		print ("Done waiting....");
 		Setup ();
     }
 
-	IEnumerator NavWait()
-	{
-		print ("Waiting on Triggers");
-		yield return new WaitForSeconds(3.0f);
-		print ("Done waiting on Triggers");
-		print (childNodes[0].navNeighbors[0].uid);
-	}
-	
+	/// <summary>
+	/// Setup map
+	/// </summary>
 	void Setup()
 	{
-
 		GetAllNodes();
-		SetTriggers();
 		print("Setup Complete");
-		StartCoroutine (NavWait());
 
+        foreach (Nav_Point c in childNodes)
+        {
+
+            foreach (Nav_Point d in c)
+            {
+                print("Node " + c.uid + " has neighbor " + d.uid);
+            }
+        }
 	}
 	
 	/// <summary>
@@ -62,6 +61,10 @@ public class Nav_Map : MonoBehaviour {
 
         foreach (GameObject child in points)
         {
+            if (child.gameObject.tag == "NavPointChild")
+            {
+                continue;
+            }
             // Get the componenet for each child in points
             childNode = child.GetComponent<Nav_Point>();
             // Set the UID
@@ -72,21 +75,5 @@ public class Nav_Map : MonoBehaviour {
             
         }
     }
-
-    void SetTriggers()
-    {
-        foreach (Nav_Point child in childNodes)
-        {
-            childGO = child.gameObject;
-			SphereCollider neighbors = (SphereCollider)childGO.collider;
-
-            neighbors.radius = 3f;
-
-        }
- 
-    }
-
-
-
 
 }
