@@ -7,8 +7,10 @@ using System;
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 
-public class Iso_Sphere : MonoBehaviour
+public class Ico_Sphere : MonoBehaviour
 {
+	public Rigidbody navNode;
+	public float radius;
 
     //The radius of the sphere is handled by the mesh scale
     public int refinements = 0;
@@ -19,14 +21,7 @@ public class Iso_Sphere : MonoBehaviour
     private Vector3[] finalVertices; //holder for the final array of vertices
     private int[] finalTriangles; //holder for the final array of triangle indexes
 
-    Mesh mesh;
-    //mesh.vertices is a Vector3[]
-    //mesh.triangles is an int[]
-
-    public void log(string s)
-    {
-        Debug.Log(s);
-    }
+	private List<NodeAndNeighbors> nodeList;
 
     //struct to hold each face's set of vertices.
     private struct TriangleIndices
@@ -43,13 +38,27 @@ public class Iso_Sphere : MonoBehaviour
         }
     }
 
+	private struct NodeAndNeighbors
+	{
+		public float x;
+		public float y;
+		public float z;
+		public List<int> indexesOfNeighbors;
+
+		public NodeAndNeighbors(float xCoord, float yCoord, float zCoord)
+		{
+			this.x = xCoord;
+			this.y = yCoord;
+			this.z = zCoord;
+			indexesOfNeighbors = new List<int>();
+		}
+	}
+
     public void Rebuild()
     {
         MeshFilter meshFilter = GetComponent<MeshFilter>();
         if (meshFilter == null)
         {
-            //Debug.LogError("MeshFilter not found!");
-            Debug.Log("MeshFilter not found!");
             return;
         }
 
@@ -86,15 +95,6 @@ public class Iso_Sphere : MonoBehaviour
         //upodate the index values so that new vertices made during refinement
         //will correspond to the appropriate index point in teh vertex list.
         index += 12;
-
-        mesh = meshFilter.sharedMesh;
-        if (mesh == null)
-        {
-            meshFilter.mesh = new Mesh();
-            mesh = meshFilter.sharedMesh;
-        }
-        mesh.Clear();
-        mesh.RecalculateNormals();
 
         //A list to temporarily hold face traingles. - relates to mesh.Triangles
         List<TriangleIndices> faces = new List<TriangleIndices>();
@@ -136,14 +136,10 @@ public class Iso_Sphere : MonoBehaviour
             foreach (var tri in faces)
             {
                 //replace the triangle with four traingles
-                //log ("Triange: v1: " + tri.v1 + ", v2: " + tri.v2 + ", v3: " + tri.v3);
-                //log ("tri: " + tri.v1 + "," + tri.v2 + "," + tri.v3);
                 int a = getMiddlePoint(tri.v1, tri.v2);
                 int b = getMiddlePoint(tri.v2, tri.v3);
                 int c = getMiddlePoint(tri.v3, tri.v1);
-
-                //log ("New Face "+j+": " + a + "," + b + "," + c);
-
+				
                 faces2.Add(new TriangleIndices(tri.v1, a, c));
                 faces2.Add(new TriangleIndices(tri.v2, b, a));
                 faces2.Add(new TriangleIndices(tri.v3, c, b));
@@ -157,46 +153,41 @@ public class Iso_Sphere : MonoBehaviour
         //now add all the triangles to the mesh
         int numFaces = faces.Count;
         int numVertices = verticesList.Count;
-        int ind = 0;
 
-        //log("number of faces on the icosphere:" + numFaces);
-        //log("Number of Vertices in Icosphere:" + numVertices);
 
-        finalTriangles = new int[numFaces * 3];
-        finalVertices = new Vector3[numVertices];
+		//	Create a list of NodeWithNeighbors
+		nodeList = new List<NodeAndNeighbors> ();
+		foreach (Vector3 coords in verticesList) 
+		{
+			nodeList.Add (new NodeAndNeighbors(coords.x, coords.y, coords.z));
 
-        //convert the list<> to an array[]
-        verticesList.CopyTo(finalVertices);
-        mesh.vertices = finalVertices;
+		}
 
-        foreach (var vert in verticesList)
-        {
-            log("Vertex " + ind + ": " + mesh.vertices[ind].x + "," + mesh.vertices[ind].y + "," + mesh.vertices[ind].z);
-            ind++;
-        }
-
-        //add each triangle vertex set to mesh.triangles.
-        ind = 0;
+        //	Create the node list
         foreach (var tri in faces)
         {
-            //log ("mesh vertices: " + index);
-            finalTriangles[ind] = tri.v1;
-            finalTriangles[ind + 1] = tri.v2;
-            finalTriangles[ind + 2] = tri.v3;
-            ind += 3;
-        }
-        mesh.triangles = finalTriangles;
+			nodeList[tri.v1].indexesOfNeighbors.Add(tri.v2);
+			nodeList[tri.v1].indexesOfNeighbors.Add(tri.v3);
 
-        mesh.RecalculateNormals();
-        ind = 0;
-        foreach (var vert in mesh.vertices)
-        {
-            log("Vertex " + ind + ": " + mesh.vertices[ind].x + "," + mesh.vertices[ind].y + "," + mesh.vertices[ind].z);
-            ind++;
+
+			nodeList[tri.v2].indexesOfNeighbors.Add(tri.v1);
+			nodeList[tri.v2].indexesOfNeighbors.Add(tri.v3);
+
+			nodeList[tri.v3].indexesOfNeighbors.Add(tri.v2);
+			nodeList[tri.v3].indexesOfNeighbors.Add(tri.v1);
+
         }
 
-        mesh.RecalculateBounds();
-        mesh.Optimize();
+		//	uncomment to draw the wireframe
+		/*
+		foreach (NodeAndNeighbors nd in nodeList) 
+		{
+			foreach(int ndNeighbor in nd.indexesOfNeighbors)
+			{
+				Debug.DrawLine(new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), new Vector3(nodeList[ndNeighbor].x * radius, nodeList[ndNeighbor].y * radius, nodeList[ndNeighbor].z * radius), Color.red, 1000000, true);
+			}
+		}
+		*/
     }
 
 
@@ -206,8 +197,6 @@ public class Iso_Sphere : MonoBehaviour
         //check to make sure we don't already have the point
         bool firstisSmaller = p1 < p2;
 
-        //log ("first is smaller: " + firstisSmaller + "  | "+ p1 + ", " + p2);
-
         Int64 smallerIndex = firstisSmaller ? p1 : p2;
         Int64 greaterIndex = firstisSmaller ? p2 : p1;
         Int64 key = (smallerIndex << 32) + greaterIndex;
@@ -215,7 +204,6 @@ public class Iso_Sphere : MonoBehaviour
         int ret;
         if (this.middlePointIndexCache.TryGetValue(key, out ret))
         {
-            //log ("ret: " + ret);
             return ret;
         }
 
@@ -228,7 +216,6 @@ public class Iso_Sphere : MonoBehaviour
 
         //addVertex makes sure that the point is on unit sphere
         int i = addVertex(middle);
-        //log ("i: " + i);
 
         //store item and return index
         this.middlePointIndexCache.Add(key, i);
@@ -246,6 +233,24 @@ public class Iso_Sphere : MonoBehaviour
     void Start()
     {
         Rebuild();
+		List<Rigidbody> navNodes = new List<Rigidbody> ();
+
+		//	Now spawn the nav_nodes
+		foreach (NodeAndNeighbors nd in nodeList) {
+			Rigidbody temp = (Rigidbody)Instantiate(navNode, new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), Quaternion.identity);
+			navNodes.Add(temp);
+		}
+
+		//	Add the neighbors to those nav nodes
+		int i = 0;
+		foreach (Rigidbody navNode in navNodes) 
+		{
+			foreach(int neighborInd in nodeList[i].indexesOfNeighbors)
+			{
+				navNode.GetComponent<Nav_Point>().navNeighbors.Add(navNodes[neighborInd].GetComponent<Nav_Point>());
+			}
+			i++;
+		}
     }
 
     // Update is called once per frame

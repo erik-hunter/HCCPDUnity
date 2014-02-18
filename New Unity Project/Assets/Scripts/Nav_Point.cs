@@ -3,8 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Nav_Point : MonoBehaviour,IEnumerator,IEnumerable {
-
-    public GameObject child;
+	
 	private Nav_Point neighbor;
 	public int weight = 1;
     int position = -1;
@@ -45,7 +44,7 @@ public class Nav_Point : MonoBehaviour,IEnumerator,IEnumerable {
             this.rigidbody.isKinematic = true;
 
             SphereCollider collid = (SphereCollider)this.collider;
-            collid.radius = 3.0f;
+            collid.radius = 1.0f;
 
             this.collider.isTrigger = true;
             wait = true;
@@ -96,5 +95,17 @@ public class Nav_Point : MonoBehaviour,IEnumerator,IEnumerable {
     {
         get { return navNeighbors[position]; }
     }
+
+	void Update()
+	{
+
+		//	Uncomment this to see the mesh of nav nodes.
+		/*
+		foreach (Nav_Point nd in navNeighbors) 
+		{
+			Debug.DrawLine(new Vector3(this.transform.position.x * 110.0f, this.transform.position.y * 110.0f, this.transform.position.z * 110.0f), new Vector3(nd.transform.position.x * 110.0f, nd.transform.position.y * 110.0f, nd.transform.position.z * 110.0f), Color.red, 1, true);
+		}
+		*/
+	}
 
 }
