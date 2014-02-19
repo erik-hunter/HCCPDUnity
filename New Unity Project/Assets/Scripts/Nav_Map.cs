@@ -16,7 +16,7 @@ public class Nav_Map : MonoBehaviour {
 
     void Start () {
         print("Setup Starting");
-        StartCoroutine(Wait(3.0f));
+        StartCoroutine(Wait(5.0f));
     }
 
     /// <summary>

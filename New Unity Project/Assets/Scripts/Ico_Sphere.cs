@@ -9,8 +9,9 @@ using System;
 
 public class Ico_Sphere : MonoBehaviour
 {
-	public Rigidbody navNode;
+	// public Rigidbody navNode;
 	public float radius;
+	public GameObject navNodeGen;
 
     //The radius of the sphere is handled by the mesh scale
     public int refinements = 0;
@@ -178,6 +179,16 @@ public class Ico_Sphere : MonoBehaviour
 
         }
 
+
+		foreach (var vert in nodeList) 
+		{
+
+			GameObject finalNavNode = Instantiate(navNodeGen, new Vector3(vert.x * radius, vert.y * radius, vert.z * radius), Quaternion.identity) as GameObject;
+			finalNavNode.transform.parent = GameObject.Find("NavMap").transform;
+		}
+
+
+
 		//	uncomment to draw the wireframe
 		/*
 		foreach (NodeAndNeighbors nd in nodeList) 
@@ -233,29 +244,24 @@ public class Ico_Sphere : MonoBehaviour
     void Start()
     {
         Rebuild();
-		List<Rigidbody> navNodes = new List<Rigidbody> ();
+		List<GameObject> navNodes = new List<GameObject> ();
 
 		//	Now spawn the nav_nodes
-		foreach (NodeAndNeighbors nd in nodeList) {
-			Rigidbody temp = (Rigidbody)Instantiate(navNode, new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), Quaternion.identity);
+		/*foreach (NodeAndNeighbors nd in nodeList) {
+			GameObject temp = Instantiate(navNodeGen, new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), Quaternion.identity) as GameObject;
 			navNodes.Add(temp);
-		}
+		} */
 
 		//	Add the neighbors to those nav nodes
-		int i = 0;
-		foreach (Rigidbody navNode in navNodes) 
+		/*int i = 0;
+		foreach (GameObject navNode in navNodes) 
 		{
 			foreach(int neighborInd in nodeList[i].indexesOfNeighbors)
 			{
 				navNode.GetComponent<Nav_Point>().navNeighbors.Add(navNodes[neighborInd].GetComponent<Nav_Point>());
 			}
 			i++;
-		}
+		} */
     }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //put code that handles LOD here
-    }
+	
 }

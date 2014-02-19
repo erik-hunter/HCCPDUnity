@@ -14,7 +14,7 @@ public class Planet_Gravity : MonoBehaviour {
     /// <param name="other"></param>
 	void OnTriggerStay (Collider other)		
 	{		
-		if (other.rigidbody != null)			
+		if (other.rigidbody != null && other.gameObject.name != "Unit")			
 		{			
 			vectorNormal = transform.position - other.transform.position;			
 			other.rigidbody.AddForce(vectorNormal * Time.deltaTime * gravityMagnitude);			
