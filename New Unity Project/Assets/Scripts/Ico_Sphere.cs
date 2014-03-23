@@ -13,6 +13,8 @@ public class Ico_Sphere : MonoBehaviour
 	public float radius;
 	public GameObject navNodeGen;
 
+    public GameObject navMap;
+
     //The radius of the sphere is handled by the mesh scale
     public int refinements = 0;
     int index;
@@ -179,14 +181,14 @@ public class Ico_Sphere : MonoBehaviour
 
         }
 
-
+        /*
 		foreach (var vert in nodeList) 
 		{
 
 			GameObject finalNavNode = Instantiate(navNodeGen, new Vector3(vert.x * radius, vert.y * radius, vert.z * radius), Quaternion.identity) as GameObject;
 			finalNavNode.transform.parent = GameObject.Find("NavMap").transform;
 		}
-
+        */
 
 
 		//	uncomment to draw the wireframe
@@ -197,8 +199,8 @@ public class Ico_Sphere : MonoBehaviour
 			{
 				Debug.DrawLine(new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), new Vector3(nodeList[ndNeighbor].x * radius, nodeList[ndNeighbor].y * radius, nodeList[ndNeighbor].z * radius), Color.red, 1000000, true);
 			}
-		}
-		*/
+		}*/
+		
     }
 
 
@@ -247,21 +249,23 @@ public class Ico_Sphere : MonoBehaviour
 		List<GameObject> navNodes = new List<GameObject> ();
 
 		//	Now spawn the nav_nodes
-		/*foreach (NodeAndNeighbors nd in nodeList) {
+		foreach (NodeAndNeighbors nd in nodeList) {
 			GameObject temp = Instantiate(navNodeGen, new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), Quaternion.identity) as GameObject;
+            // temp.transform.parent = this.transform;
 			navNodes.Add(temp);
-		} */
+		}
+        print(navNodes.Count);
 
 		//	Add the neighbors to those nav nodes
-		/*int i = 0;
+		int i = 0;
 		foreach (GameObject navNode in navNodes) 
 		{
 			foreach(int neighborInd in nodeList[i].indexesOfNeighbors)
 			{
-				navNode.GetComponent<Nav_Point>().navNeighbors.Add(navNodes[neighborInd].GetComponent<Nav_Point>());
+				navNode.GetComponent<NavPointGen>().navNeighbors.Add(navNodes[neighborInd].GetComponent<NavPointGen>());
 			}
 			i++;
-		} */
+		}
     }
 	
 }

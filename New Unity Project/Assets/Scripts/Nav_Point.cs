@@ -32,6 +32,7 @@ public class Nav_Point : MonoBehaviour,IEnumerator,IEnumerable {
 
     // All the code below makes it so we can loop through our navNeighbors list.
 
+
     //IEnumerator and IEnumerable require these methods.
     public IEnumerator GetEnumerator()
     {

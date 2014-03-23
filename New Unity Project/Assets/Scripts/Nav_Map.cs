@@ -9,9 +9,9 @@ public class Nav_Map : MonoBehaviour {
     /// The lists we will use to access and store our Nav_Points
     /// </summary>
     private GameObject[] points;
-    private Nav_Point childNode;
+    private NavPointGen childNode;
     private GameObject childGO;
-    private IList<Nav_Point> childNodes = new List<Nav_Point>();
+    private IList<NavPointGen> childNodes = new List<NavPointGen>();
 
 
     void Start () {
@@ -39,7 +39,7 @@ public class Nav_Map : MonoBehaviour {
 		GetAllNodes();
 		print("Setup Complete");
 
-        foreach (Nav_Point c in childNodes)
+        foreach (NavPointGen c in childNodes)
         {
 
             foreach (Nav_Point d in c)
@@ -61,12 +61,8 @@ public class Nav_Map : MonoBehaviour {
 
         foreach (GameObject child in points)
         {
-            if (child.gameObject.tag == "NavPointChild")
-            {
-                continue;
-            }
             // Get the componenet for each child in points
-            childNode = child.GetComponent<Nav_Point>();
+            childNode = child.GetComponent<NavPointGen>();
             // Set the UID
             childNode.uid = i;
             // Add the childNode to our ArrayList of childNodes
