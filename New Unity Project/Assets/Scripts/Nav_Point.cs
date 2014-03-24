@@ -8,7 +8,7 @@ public class Nav_Point : MonoBehaviour,IEnumerator,IEnumerable {
 	public int weight = 1;
     int position = -1;
 
-    private bool wait = false;
+    // private bool wait = false;
 
     /// <summary>
     /// This is the unique identifer for each particular node.

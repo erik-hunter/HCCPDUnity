@@ -154,8 +154,8 @@ public class Ico_Sphere : MonoBehaviour
         }//end for(int i)
 
         //now add all the triangles to the mesh
-        int numFaces = faces.Count;
-        int numVertices = verticesList.Count;
+        // int numFaces = faces.Count;
+        // int numVertices = verticesList.Count;
 
 
 		//	Create a list of NodeWithNeighbors
@@ -181,14 +181,6 @@ public class Ico_Sphere : MonoBehaviour
 
         }
 
-        /*
-		foreach (var vert in nodeList) 
-		{
-
-			GameObject finalNavNode = Instantiate(navNodeGen, new Vector3(vert.x * radius, vert.y * radius, vert.z * radius), Quaternion.identity) as GameObject;
-			finalNavNode.transform.parent = GameObject.Find("NavMap").transform;
-		}
-        */
 
 
 		//	uncomment to draw the wireframe
@@ -199,7 +191,9 @@ public class Ico_Sphere : MonoBehaviour
 			{
 				Debug.DrawLine(new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), new Vector3(nodeList[ndNeighbor].x * radius, nodeList[ndNeighbor].y * radius, nodeList[ndNeighbor].z * radius), Color.red, 1000000, true);
 			}
-		}*/
+		}
+		*/
+
 		
     }
 
@@ -251,7 +245,6 @@ public class Ico_Sphere : MonoBehaviour
 		//	Now spawn the nav_nodes
 		foreach (NodeAndNeighbors nd in nodeList) {
 			GameObject temp = Instantiate(navNodeGen, new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), Quaternion.identity) as GameObject;
-            // temp.transform.parent = this.transform;
 			navNodes.Add(temp);
 		}
         print(navNodes.Count);
@@ -260,12 +253,14 @@ public class Ico_Sphere : MonoBehaviour
 		int i = 0;
 		foreach (GameObject navNode in navNodes) 
 		{
+			// print (nodeList[i].indexesOfNeighbors.Count);
 			foreach(int neighborInd in nodeList[i].indexesOfNeighbors)
 			{
 				navNode.GetComponent<NavPointGen>().navNeighbors.Add(navNodes[neighborInd].GetComponent<NavPointGen>());
 			}
 			i++;
 		}
+
     }
 	
 }
