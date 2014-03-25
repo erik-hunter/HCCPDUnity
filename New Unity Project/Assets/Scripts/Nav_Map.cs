@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class Nav_Map : MonoBehaviour {
 	
@@ -17,6 +18,10 @@ public class Nav_Map : MonoBehaviour {
 	private GameObject[] navNodes;
 
 	public List<NavNode> navGraph = new List<NavNode>();
+	public List<NavNode> spawnPoints = new List<NavNode>();
+
+
+	private Vector3 spawnCenter = new Vector3(0.0f, 100.0f, 0.0f);
 
 
     void Start () {
@@ -42,24 +47,19 @@ public class Nav_Map : MonoBehaviour {
 	void Setup()
 	{
 		GetAllNodes();
-		print("Setup Complete");
+		print("Setup Complete, Setting up NavGraph");
 		CreateNavMap ();
-		print ("NavMap size is: " + navGraph.Count);
-
-		// 2345  (-38.5, -79.1, -48.9) (-36.6, -79.5, -49.1)
-		print (navGraph [0].uid);
-		print (navGraph [0].passable);
-		print (navGraph [0].pos);
-		for(int i = 0; i < 6; i++) 
-		{
-			print (navGraph[0].neighbors[i]);
-		}
+		print ("SpawnPoint size is: " + spawnPoints.Count);
 
 		DeleteNodes ();
+		//DestoryExtraComponents ();
 
 
 	}
 
+	/// <summary>
+	/// Deletes the nodes as we have created our graph and no long need them
+	/// </summary>
 	void DeleteNodes()
 	{
 		foreach (GameObject node in navNodes)
@@ -67,6 +67,7 @@ public class Nav_Map : MonoBehaviour {
 			Destroy(node);
 		}
 	}
+
 
 	void CreateNavMap()
 	{
@@ -78,6 +79,8 @@ public class Nav_Map : MonoBehaviour {
 			// Get the componenet for each child in points
 			childNode = node.GetComponent<NavPointGen>();
 
+			// Create NavNodes with any/all information we need. The below needs to be edited for additional items 
+			// that we want to keep track of.
 			NavNode n = new NavNode();
 
 			n.uid = childNode.uid;
@@ -95,13 +98,28 @@ public class Nav_Map : MonoBehaviour {
 				}
 			}
 
+			// Add points that are within our spawn region to a list of spawn points we can use later.
+			double dis = Distance(spawnCenter, n.pos);
+			if(dis < 15.0  && dis > 7.0)
+			{
+				spawnPoints.Add (n);
+			}
+
+			// Add all points to our nav graph
 			navGraph.Add(n);
 
 		}
+		print ("NavGraph Created"); 
 
 
 	}
-	
+
+	void DestoryExtraComponents()
+	{
+		Destroy (this.gameObject.collider);
+		Destroy (this.gameObject.renderer);
+	}
+
 	/// <summary>
     /// This will get every node on our map and assign a UID to it. Can access later.
     /// </summary>
@@ -125,8 +143,27 @@ public class Nav_Map : MonoBehaviour {
         }
     }
 
+
+	/// <summary>
+	/// Calculates the straight line distance between two 3D points
+	/// </summary>
+	/// <param name="start">Start.</param>
+	/// <param name="end">End.</param>
+	public double Distance(Vector3 start, Vector3 end)
+	{
+		double xd = (double) start.x - end.x;
+		double yd = (double) start.y - end.y;
+		double zd = (double) start.z - end.z;
+
+		return (Math.Sqrt (xd * xd + yd * yd + zd * zd));
+
+	}
+
 }
 
+/// <summary>
+/// Class to hold all the information we need for our NavGraph
+/// </summary>
 public class NavNode
 {
 	public int uid;

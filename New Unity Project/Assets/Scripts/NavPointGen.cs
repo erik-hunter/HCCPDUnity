@@ -9,7 +9,6 @@ public class NavPointGen : MonoBehaviour {
 	public float fallSpeed = 3.0f;
 	public GameObject navNode;
 	public bool stillMoving = true;
-	//public GameObject navMap;
 
     int position = -1;
 
@@ -18,11 +17,6 @@ public class NavPointGen : MonoBehaviour {
     /// </summary>
     public int uid;
 
-    /// <summary>
-    /// This will be used to tell our units if this node is passable or not
-    /// </summary>
-    public bool passable = true;
-
 
     /// <summary>
     /// This is just a list that will contain all of the nodes we can reach
@@ -30,6 +24,10 @@ public class NavPointGen : MonoBehaviour {
     /// </summary>
     public IList<NavPointGen> navNeighbors = new List<NavPointGen>();
     
+
+	/// <summary>
+	/// This is used to have our nodes move towards the center of the planet and stop when they are within a given distance.
+	/// </summary>
 	public void Update() 
 	{
 
@@ -51,7 +49,6 @@ public class NavPointGen : MonoBehaviour {
 	}
 
     // All the code below makes it so we can loop through our navNeighbors list.
-
 
     //IEnumerator and IEnumerable require these methods.
     public IEnumerator GetEnumerator()

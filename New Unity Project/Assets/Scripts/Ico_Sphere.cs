@@ -193,7 +193,6 @@ public class Ico_Sphere : MonoBehaviour
 			}
 		}
 		*/
-
 		
     }
 
@@ -247,7 +246,6 @@ public class Ico_Sphere : MonoBehaviour
 			GameObject temp = Instantiate(navNodeGen, new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), Quaternion.identity) as GameObject;
 			navNodes.Add(temp);
 		}
-        print(navNodes.Count);
 
 		//	Add the neighbors to those nav nodes
 		int i = 0;
