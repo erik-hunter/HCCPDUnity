@@ -26,13 +26,13 @@ public class Planet_Player: MonoBehaviour {
         
 
         // These are used for automated movement
-		transform.position = Vector3.MoveTowards(transform.position, target.position, runSpeed * Time.deltaTime);
-        Vector3 newDir = Vector3.RotateTowards(transform.position, target.position, turnSpeed * Time.deltaTime, 0.0f);
-        transform.rotation = Quaternion.LookRotation(newDir);
+		//transform.position = Vector3.MoveTowards(transform.position, target.position, runSpeed * Time.deltaTime);
+        //Vector3 newDir = Vector3.RotateTowards(transform.position, target.position, turnSpeed * Time.deltaTime, 0.0f);
+        //transform.rotation = Quaternion.LookRotation(newDir);
 
         // This is used for manual movement.
-	    //transform.position += transform.forward * (Input.GetAxis("Vertical") * Time.deltaTime * runSpeed);
-        //transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * turnSpeed, 0));
+	    transform.position += transform.forward * (Input.GetAxis("Vertical") * Time.deltaTime * runSpeed);
+        transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * turnSpeed, 0));
 		
 
 		
