@@ -19,6 +19,7 @@ public class Nav_Map : MonoBehaviour {
 
 	public List<NavNode> navGraph = new List<NavNode>();
 	public List<NavNode> spawnPoints = new List<NavNode>();
+	public bool doneSettingUp = false;
 
 
 	private Vector3 spawnCenter = new Vector3(0.0f, 100.0f, 0.0f);
@@ -54,7 +55,7 @@ public class Nav_Map : MonoBehaviour {
 		DeleteNodes ();
 		//DestoryExtraComponents ();
 
-
+		doneSettingUp = true;
 	}
 
 	/// <summary>
