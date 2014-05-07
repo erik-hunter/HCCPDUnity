@@ -192,7 +192,7 @@ public class Ico_Sphere : MonoBehaviour
 				Debug.DrawLine(new Vector3(nd.x * radius, nd.y * radius, nd.z * radius), new Vector3(nodeList[ndNeighbor].x * radius, nodeList[ndNeighbor].y * radius, nodeList[ndNeighbor].z * radius), Color.red, 1000000, true);
 			}
 		}
-		*/
+*/
 		
     }
 

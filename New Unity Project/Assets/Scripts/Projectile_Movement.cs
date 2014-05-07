@@ -10,10 +10,11 @@ public class Projectile_Movement : MonoBehaviour {
 	void Start ()
 	{
 	}
-	
-	void Update()
+
+
+	void FixedUpdate()
 	{
-		transform.position = Vector3.MoveTowards(transform.position, target, step);
+		transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
 		transform.LookAt (Camera.main.transform);
 	}
 	
@@ -21,6 +22,5 @@ public class Projectile_Movement : MonoBehaviour {
 	{
 		this.target = target;
 		this.speed = speed;
-		this.step = speed * Time.deltaTime;
 	}
 }

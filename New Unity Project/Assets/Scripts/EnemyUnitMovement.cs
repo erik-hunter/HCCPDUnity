@@ -7,36 +7,40 @@ public class EnemyUnitMovement : MonoBehaviour {
 	
 	List<NavNode> path = new List<NavNode> ();
 	public GameObject NavMap;	//	Has the graph and other game properties
-	
+
+	public Transform targetPlanet;
+	private Vector3 vectorNormal;	
+	private Vector3 vectorCross;
+
 	// Use this for initialization
 	void Start () {
 		
 	}
 
-	private void setMyPath() 
+	void OnTriggerEnter(Collider other)
+	{
+
+		if (other.gameObject.tag == "tower") 
+		{
+			other.gameObject.GetComponent<Tower_script> ().enemiesInRange.Add (this.gameObject);
+			Debug.Log ("Enemy entered");
+		} 
+		else if (other.gameObject.tag == "Projectile")
+						Destroy (other.gameObject);
+	}
+
+	void OnTriggerExit(Collider other)
 	{
 		
-		/*
-		//	Find a path from the bottom to the top
-		//Debug.LogError ("Finding the path");
-		Rigidbody start = null;
-		Nav_Point end = null;
-		foreach (Rigidbody navNode in planet.GetComponent<Ico_Sphere>().navNodes) 
+		if (other.gameObject.tag == "tower") 
 		{
-			Vector3 pos = navNode.position;
-			if(start == null && pos.y < (-0.5f * planet.GetComponent<Ico_Sphere>().radius))
-			{
-				start = navNode;
-			}
-			if(pos.x == 0.0f && pos.z == 0.0f && pos.y > 0.0f)
-			{
-				end = navNode.GetComponent<Nav_Point>();
-			}
-			
-			if(end != null && start != null)
-				break;
+			other.gameObject.GetComponent<Tower_script>().enemiesInRange.Remove (this.gameObject);
+			Debug.Log ("Enemy left");
 		}
-		*/
+	}
+
+	private void setMyPath() 
+	{
 		NavNode end = null;
 		foreach (NavNode node in NavMap.GetComponent<Nav_Map>().navGraph) 
 		{
@@ -103,7 +107,23 @@ public class EnemyUnitMovement : MonoBehaviour {
 			return;
 
 		//	See if I'm already at the targeted node:
+		/*
 		if (this.transform.position == this.path[0].pos) 
+		{
+			if(path.Count == 1)
+			{
+				path.Clear();
+				return;
+			}
+			else
+			{
+				path.RemoveAt(0);
+				
+			}
+			
+		}*/
+
+		if (Distance(this.transform.position, this.path[0].pos) < 7.5) 
 		{
 			if(path.Count == 1)
 			{
@@ -123,6 +143,10 @@ public class EnemyUnitMovement : MonoBehaviour {
 		
 		// Move our position a step closer to the target.
 		transform.position = Vector3.MoveTowards(transform.position, path[0].pos, step);
+
+		//vectorNormal = transform.position - targetPlanet.position;		
+		//vectorCross = -Vector3.Cross(vectorNormal, transform.right);		
+		//transform.rotation = Quaternion.LookRotation(vectorCross, vectorNormal); 
 
 		/*
 		if (path.Count == 0)
@@ -152,5 +176,20 @@ public class EnemyUnitMovement : MonoBehaviour {
 		transform.position = Vector3.MoveTowards(transform.position, path[0].transform.position, step);
 		path [0].enemy = this;
 		*/
+	}
+
+	/// <summary>
+	/// Calculates the straight line distance between two 3D points
+	/// </summary>
+	/// <param name="start">Start.</param>
+	/// <param name="end">End.</param>
+	public double Distance(Vector3 start, Vector3 end)
+	{
+		double xd = (double) start.x - end.x;
+		double yd = (double) start.y - end.y;
+		double zd = (double) start.z - end.z;
+		
+		return (Math.Sqrt (xd * xd + yd * yd + zd * zd));
+		
 	}
 }

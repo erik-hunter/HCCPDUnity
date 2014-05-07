@@ -12,10 +12,11 @@ public class Tower_script : MonoBehaviour {
 	//public GameObject planet;	//	Has the graph and other game properties
 	Nav_Point closestNode = null;
 	public GameObject projectile;
-	public float speed = 10f;
+	public float speed = 200f;
 	bool initDone = false;
+	int framesSinceFire = 0;
 
-	List<GameObject> enemiesInRange = new List<GameObject>();
+	public List<GameObject> enemiesInRange = new List<GameObject>();
 	
 	// Use this for initialization
 	void Start () 
@@ -23,30 +24,15 @@ public class Tower_script : MonoBehaviour {
 		
 	}
 
-	void OnTriggerEnter(Collider enemy)
-	{
-		if (enemy.gameObject.tag == "enemy_cube") 
-		{
-			enemiesInRange.Add (enemy.gameObject);
-			Debug.Log ("Enemy entered");
-		}
-	}
 
-	void OnTriggerExit(Collider enemy)
-	{
-
-		if (enemy.gameObject.tag == "enemy_cube") 
-		{
-			enemiesInRange.Remove (enemy.gameObject);
-			Debug.Log ("Enemy left");
-		}
-	}
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if (enemiesInRange.Count > 0)
+
+		if (enemiesInRange.Count > 0 && framesSinceFire % 20 == 0)
 			fire (enemiesInRange [0].transform.position);
+
+		framesSinceFire++;
 	}
 	
 	

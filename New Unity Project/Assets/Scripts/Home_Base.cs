@@ -18,9 +18,9 @@ public class Home_Base : MonoBehaviour {
     /// </summary>
     /// <param name="other"></param>
 	void OnTriggerEnter(Collider other) {
-        if (other.gameObject.tag == "Player")
+        if (other.gameObject.tag == "enemy_cube")
         {
-            Destroy(other.gameObject);
+            // Destroy(other.gameObject);
             lives--;
             livesRemaining.text = "Lives Remaining: " + lives.ToString();
         }

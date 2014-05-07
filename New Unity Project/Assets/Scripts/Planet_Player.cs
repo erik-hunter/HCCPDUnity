@@ -31,23 +31,23 @@ public class Planet_Player: MonoBehaviour {
         //transform.rotation = Quaternion.LookRotation(newDir);
 
         // This is used for manual movement.
-	    transform.position += transform.forward * (Input.GetAxis("Vertical") * Time.deltaTime * runSpeed);
-        transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * turnSpeed, 0));
+	    //transform.position += transform.forward * (Input.GetAxis("Vertical") * Time.deltaTime * runSpeed);
+        //transform.Rotate(new Vector3(0, Input.GetAxis("Horizontal") * Time.deltaTime * turnSpeed, 0));
 		
 
 		
 		// transform.position += transform.right * (Input.GetAxis("Strafe") * Time.deltaTime * strafeSpeed);
 
-		if (Input.GetButton("Jump") && canJump)	
-		{			
-			rigidbody.AddForce(vectorNormal * jumpSpeed);			
-		}
+		//if (Input.GetButton("Jump") && canJump)	
+		//{			
+			//rigidbody.AddForce(vectorNormal * jumpSpeed);			
+		//}
 
         // This makes sure that our units stay 'upright' on the planet at any given time.
 		vectorNormal = transform.position - targetPlanet.position;		
 		vectorCross = -Vector3.Cross(vectorNormal, transform.right);		
 		transform.rotation = Quaternion.LookRotation(vectorCross, vectorNormal); 
-		
+
 	}
 
 	void OnCollisionStay (Collision other)		

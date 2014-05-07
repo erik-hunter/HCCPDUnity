@@ -15,6 +15,8 @@ public class Nav_Map : MonoBehaviour {
     private GameObject childGO;
     private IList<NavPointGen> childNodes = new List<NavPointGen>();
 
+	public GameObject cube;
+
 	private GameObject[] navNodes;
 
 	public List<NavNode> navGraph = new List<NavNode>();
@@ -56,7 +58,28 @@ public class Nav_Map : MonoBehaviour {
 		//DestoryExtraComponents ();
 
 		doneSettingUp = true;
+
+		spawnCubes ();
 	}
+
+	void spawnCubes(){
+
+		GameObject newCube = (GameObject) Instantiate(cube, this.transform.position, this.transform.rotation);
+		newCube.GetComponent<EnemyUnitMovement> ().NavMap = this.gameObject;
+		newCube = (GameObject) Instantiate(cube, this.transform.position, this.transform.rotation);
+		newCube.GetComponent<EnemyUnitMovement> ().NavMap = this.gameObject;
+		newCube = (GameObject) Instantiate(cube, this.transform.position, this.transform.rotation);
+		newCube.GetComponent<EnemyUnitMovement> ().NavMap = this.gameObject;
+		newCube = (GameObject) Instantiate(cube, this.transform.position, this.transform.rotation);
+		newCube.GetComponent<EnemyUnitMovement> ().NavMap = this.gameObject;
+		newCube = (GameObject) Instantiate(cube, this.transform.position, this.transform.rotation);
+		newCube.GetComponent<EnemyUnitMovement> ().NavMap = this.gameObject;
+
+
+
+	}
+
+
 
 	/// <summary>
 	/// Deletes the nodes as we have created our graph and no long need them
